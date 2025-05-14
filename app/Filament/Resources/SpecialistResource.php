@@ -38,11 +38,10 @@ class SpecialistResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->columns([
+             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('description')
-                    ->searchable(),
+                Tables\Columns\TextColumn::make('description'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -53,19 +52,29 @@ class SpecialistResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                // Tables\Filters\SelectFilter::make('name')
+                //     ->options(fn () => \App\Models\Specialist::pluck('name', 'id'))
+                //     ->searchable(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
+                    ->label('')
                     ->modalHeading('Edit Specialist'),
                     // ->slideOver(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->label(''),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->recordUrl(null)
+            ->recordAction(null)
+            ->striped()
+            // ->hoverable()
+            ->deferLoading();
+
     }
 
     public static function getRelations(): array

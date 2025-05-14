@@ -12,12 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('doctors', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->integer('id')->autoIncrement()->primary();
             $table->string('code')->unique();
             $table->string('name');
             $table->enum('gender', ['male', 'female']);
-            $table->boolean('status')->default(true);
-            $table->foreignUuid('specialist_id')->constrained('specialists')->cascadeOnDelete();
+            $table->boolean('is_active')->default(true);
+            $table->integer('specialist_id')->constrained('specialists')->cascadeOnDelete();
+            // $table->foreignId('specialist_id')->constrained('specialists')->cascadeOnDelete();
             $table->timestamps();
             $table->softDeletes();
         });

@@ -39,14 +39,16 @@ class DoctorResource extends Resource
                         'female' => 'Female',
                     ]),
 
-                    Forms\Components\Select::make('specialist_id')
-                    ->relationship('specialist', 'name', fn (Builder $query) => $query->whereNull('deleted_at')) // Exclude soft-deleted specialists
-                    // ->searchable() // Enables searching by name
-                    ->required(),
+                Forms\Components\Select::make('specialist_id')
+                // ->relationship('specialist', 'name', fn (Builder $query) => $query->whereNull('deleted_at')) // Exclude soft-deleted specialists
+                // show data from specialist table
+                ->options(fn () => \App\Models\Specialist::pluck('name', 'id')->whereNull('deleted_at'))
+                ->searchable() // Enables searching by name
+                ->required(),
 
 
 
-                Forms\Components\Toggle::make('status')
+                Forms\Components\Toggle::make('is_active')
                 ->required(),
             ]);
     }
@@ -60,11 +62,9 @@ class DoctorResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('gender'),
-                    // ->searchable(),
-                Tables\Columns\IconColumn::make('status')
+                Tables\Columns\TextColumn::make('specialist.name'),
+                Tables\Columns\IconColumn::make('is_active')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('specialist.name')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -76,21 +76,29 @@ class DoctorResource extends Resource
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('specialist_id')
-                    ->relationship('specialist', 'name', fn (Builder $query) => $query->whereNull('deleted_at')),
+                    ->relationship('specialist', 'name', fn (Builder $query) => $query->whereNull('deleted_at'))
+                    ->label('Specialist'),
                     // ->options(fn () => \App\Models\Specialist::pluck('name', 'id')) // Fetch all specialists
                     // ->searchable(),
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
+                    ->label('')
                     ->modalHeading('Edit Doctor'),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DeleteAction::make()
+                // ->icon('heroicon-o-trash')
+                ->label(''),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->recordUrl(null)
+            ->recordAction(null)
+            ->striped()
+            ->deferLoading();
     }
 
     public static function getRelations(): array
