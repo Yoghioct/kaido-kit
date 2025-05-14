@@ -38,11 +38,16 @@ class DoctorResource extends Resource
                         'male' => 'Male',
                         'female' => 'Female',
                     ]),
+
+                    Forms\Components\Select::make('specialist_id')
+                    ->relationship('specialist', 'name', fn (Builder $query) => $query->whereNull('deleted_at')) // Exclude soft-deleted specialists
+                    // ->searchable() // Enables searching by name
+                    ->required(),
+
+
+
                 Forms\Components\Toggle::make('status')
-                    ->required(),
-                Forms\Components\Select::make('specialist_id')
-                    ->relationship('specialist', 'name')
-                    ->required(),
+                ->required(),
             ]);
     }
 
@@ -54,8 +59,8 @@ class DoctorResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('gender')
-                    ->searchable(),
+                Tables\Columns\TextColumn::make('gender'),
+                    // ->searchable(),
                 Tables\Columns\IconColumn::make('status')
                     ->boolean(),
                 Tables\Columns\TextColumn::make('specialist.name')
@@ -70,10 +75,15 @@ class DoctorResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
+                Tables\Filters\SelectFilter::make('specialist_id')
+                    ->relationship('specialist', 'name', fn (Builder $query) => $query->whereNull('deleted_at')),
+                    // ->options(fn () => \App\Models\Specialist::pluck('name', 'id')) // Fetch all specialists
+                    // ->searchable(),
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->modalHeading('Edit Doctor'),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
@@ -94,8 +104,6 @@ class DoctorResource extends Resource
     {
         return [
             'index' => Pages\ListDoctors::route('/'),
-            'create' => Pages\CreateDoctor::route('/create'),
-            'edit' => Pages\EditDoctor::route('/{record}/edit'),
         ];
     }
 }

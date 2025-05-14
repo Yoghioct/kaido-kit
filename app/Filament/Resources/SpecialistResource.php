@@ -27,7 +27,8 @@ class SpecialistResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->columnSpanFull(),
                 Forms\Components\Textarea::make('description')
                     ->maxLength(65535)
                     ->columnSpanFull(),
@@ -39,6 +40,8 @@ class SpecialistResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('description')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -53,7 +56,9 @@ class SpecialistResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->modalHeading('Edit Specialist'),
+                    // ->slideOver(),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
@@ -74,8 +79,6 @@ class SpecialistResource extends Resource
     {
         return [
             'index' => Pages\ListSpecialists::route('/'),
-            'create' => Pages\CreateSpecialist::route('/create'),
-            'edit' => Pages\EditSpecialist::route('/{record}/edit'),
         ];
     }
 }
