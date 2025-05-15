@@ -128,6 +128,7 @@ class AdminPanelProvider extends PanelProvider
                         ->image()
                         ->disk('public')
                 )
+                ->enableBrowserSessions(condition: true)
                 ->enableTwoFactorAuthentication(),
         ];
 
