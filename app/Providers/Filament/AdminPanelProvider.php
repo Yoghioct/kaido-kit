@@ -95,7 +95,16 @@ class AdminPanelProvider extends PanelProvider
             ->plugins(
                 $this->getPlugins()
             )
-            ->databaseNotifications();
+            ->databaseNotifications()
+            ->plugin(
+                ThemesPlugin::make()
+                    ->canViewThemesPage(fn () => auth()->check() && auth()->user()->hasRole('super_admin'))
+            )
+            ->viteTheme('resources/css/filament/admin/theme.css')
+            // ->viteTheme('resources/css/filament/admin/theme.css')
+            // ->viteAsset('resources/css/custom.css')
+            // ->themeCustomizer(false)
+            ;
     }
 
     private function getPlugins(): array
@@ -110,7 +119,7 @@ class AdminPanelProvider extends PanelProvider
                     shouldRegisterNavigation: true, // Adds a main navigation item for the My Profile page (default = false)
                     navigationGroup: 'Settings', // Sets the navigation group for the My Profile page (default = null)
                     hasAvatars: true, // Enables the avatar upload form component (default = false)
-                    slug: 'my-profile'
+                    slug: 'profile'
                 )
                 ->avatarUploadComponent(fn($fileUpload) => $fileUpload->disableLabel())
                 // OR, replace with your own component

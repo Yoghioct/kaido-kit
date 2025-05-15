@@ -7,12 +7,6 @@
         </x-slot>
     @endif
 
-    <style>
-        .fi-simple-header-heading {
-            display: none;
-        }
-    </style>
-
     {{ \Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::AUTH_LOGIN_FORM_BEFORE, scopes: $this->getRenderHookScopes()) }}
 
     <x-filament-panels::form id="form" wire:submit="authenticate">
