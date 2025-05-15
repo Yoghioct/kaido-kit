@@ -4,8 +4,9 @@ return [
     'navigation' => [
         'token' => [
             'cluster' => null,
-            'group' => 'User',
-            'sort' => -1,
+            'group' => 'API',
+            'sort' => 99,
+            // 'slug' => 'settings/token',
             'icon' => 'heroicon-o-key',
         ],
     ],

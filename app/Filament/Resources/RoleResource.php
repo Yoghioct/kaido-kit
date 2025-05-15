@@ -23,6 +23,14 @@ class RoleResource extends Resource implements HasShieldPermissions
 
     protected static ?string $recordTitleAttribute = 'name';
 
+    // protected static ?string $slug = 'settings/roles';
+
+    // protected static ?string $title = 'Role Management';
+
+    // protected static ?int $navigationSort = 2;
+
+    // protected static ?string $navigationGroup = 'Settings';
+
     public static function getPermissionPrefixes(): array
     {
         return [

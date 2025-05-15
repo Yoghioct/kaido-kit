@@ -20,6 +20,14 @@ class ManageSetting extends SettingsPage
 
     protected static ?string $navigationGroup = 'Settings';
 
+    protected static ?string $recordTitleAttribute = 'name';
+
+    protected static ?string $title = 'Web Setting';
+
+    protected static ?string $slug = 'settings/web';
+
+    protected static ?int $navigationSort = 4;
+
     public function form(Form $form): Form
     {
         return $form
