@@ -121,12 +121,20 @@ class RoleResource extends Resource implements HasShieldPermissions
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                // edit action with modal
+                Tables\Actions\EditAction::make()
+                    ->label('')
+                    ->modalHeading('Edit Role'),
+                Tables\Actions\DeleteAction::make()
+                    ->label(''),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
-            ]);
+            ])
+            ->recordUrl(null)
+            ->recordAction(null)
+            ->striped()
+            ->deferLoading();
     }
 
     public static function getRelations(): array
@@ -140,9 +148,9 @@ class RoleResource extends Resource implements HasShieldPermissions
     {
         return [
             'index' => Pages\ListRoles::route('/'),
-            'create' => Pages\CreateRole::route('/create'),
-            'view' => Pages\ViewRole::route('/{record}'),
-            'edit' => Pages\EditRole::route('/{record}/edit'),
+            // 'create' => Pages\CreateRole::route('/create'),
+            // 'view' => Pages\ViewRole::route('/{record}'),
+            // 'edit' => Pages\EditRole::route('/{record}/edit'),
         ];
     }
 

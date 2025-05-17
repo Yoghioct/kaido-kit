@@ -66,28 +66,44 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\Layout\Split::make([
-                    Tables\Columns\ImageColumn::make('avatar_url')
-                        ->searchable()
-                        ->circular()
-                        ->grow(false)
-                        ->getStateUsing(fn($record) => $record->avatar_url
-                            ? $record->avatar_url
-                            : "https://ui-avatars.com/api/?name=" . urlencode($record->name)),
-                    Tables\Columns\TextColumn::make('name')
-                        ->searchable()
-                        ->weight(FontWeight::Bold),
-                    Tables\Columns\Layout\Stack::make([
-                        Tables\Columns\TextColumn::make('roles.name')
-                            ->searchable()
-                            ->icon('heroicon-o-shield-check')
-                            ->grow(false),
-                        Tables\Columns\TextColumn::make('email')
-                            ->icon('heroicon-m-envelope')
-                            ->searchable()
-                            ->grow(false),
-                    ])->alignStart()->visibleFrom('lg')->space(1)
-                ]),
+                Tables\Columns\TextColumn::make('name')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('email')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('username')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('roles.name')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                // Tables\Columns\Layout\Split::make([
+                //     Tables\Columns\ImageColumn::make('avatar_url')
+                //         ->searchable()
+                //         ->circular()
+                //         ->grow(false)
+                //         ->getStateUsing(fn($record) => $record->avatar_url
+                //             ? $record->avatar_url
+                //             : "https://ui-avatars.com/api/?name=" . urlencode($record->name)),
+                //     Tables\Columns\TextColumn::make('name')
+                //         ->searchable()
+                //         ->weight(FontWeight::Bold),
+                //     Tables\Columns\Layout\Stack::make([
+                //         Tables\Columns\TextColumn::make('roles.name')
+                //             ->searchable()
+                //             ->icon('heroicon-o-shield-check')
+                //             ->grow(false),
+                //         Tables\Columns\TextColumn::make('email')
+                //             ->icon('heroicon-m-envelope')
+                //             ->searchable()
+                //             ->grow(false),
+                //     ])->alignStart()->visibleFrom('lg')->space(1)
+                // ]),
             ])
             ->filters([
                 //
@@ -97,10 +113,17 @@ class UserResource extends Resource
                     ->preload(),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                // Tables\Actions\ViewAction::make()
+                //     ->label(''),
+                // impersonate action
+                Impersonate::make()
+                    ->label('')
+                    ->icon('heroicon-o-key'),
+                Tables\Actions\EditAction::make()
+                    ->label(''),
                 Action::make('Set Role')
                     ->icon('heroicon-m-adjustments-vertical')
+                    ->label('')
                     ->form([
                         Select::make('role')
                             ->relationship('roles', 'name')
@@ -112,7 +135,8 @@ class UserResource extends Resource
                             ->getOptionLabelFromRecordUsing(fn($record) => $record->name),
                     ]),
                 // Impersonate::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->label(''),
             ])
             ->headerActions([
                 ExportAction::make()
@@ -126,7 +150,11 @@ class UserResource extends Resource
                 ]),
                 ExportBulkAction::make()
                     ->exporter(UserExporter::class)
-            ]);
+            ])
+            ->recordUrl(null)
+            ->recordAction(null)
+            ->striped()
+            ->deferLoading();
     }
 
     public static function getRelations(): array
@@ -140,9 +168,9 @@ class UserResource extends Resource
     {
         return [
             'index' => Pages\ListUsers::route('/'),
-            'create' => Pages\CreateUser::route('/create'),
-            'view' => Pages\ViewUser::route('/{record}'),
-            'edit' => Pages\EditUser::route('/{record}/edit'),
+            // 'create' => Pages\CreateUser::route('/create'),
+            // 'view' => Pages\ViewUser::route('/{record}'),
+            // 'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
     }
     public static function infolist(Infolist $infolist): Infolist
@@ -154,5 +182,11 @@ class UserResource extends Resource
                     TextEntry::make('email'),
                 ]),
             ]);
+    }
+
+    // disable globally search
+    public static function canGloballySearch(): bool
+    {
+        return false;
     }
 }

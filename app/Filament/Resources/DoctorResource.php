@@ -19,7 +19,20 @@ class DoctorResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
-    protected static ?string $navigationGroup = 'Doctor Management';
+    protected static ?string $navigationGroup = 'Master Data';
+
+    protected static ?int $navigationSort = 1;
+
+    protected static ?string $recordTitleAttribute = 'name';
+
+    protected static ?string $slug = 'master-data/doctors';
+
+    protected static ?string $title = 'Doctor Management';
+
+    public static function getBreadcrumbs()
+    {
+        return '';
+    }
 
     public static function form(Form $form): Form
     {

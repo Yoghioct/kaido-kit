@@ -11,9 +11,16 @@
     background-color: red;
 } */
 
+body {
+    margin-bottom: 0 !important;
+}
+
+.fi-breadcrumbs {
+    display: none !important;
+}
 
 .fi-simple-header-heading {
-    display: none;
+    display: none !important;
 }
 
 
