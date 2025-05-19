@@ -2,24 +2,24 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\SpecialistResource\Pages;
-use App\Filament\Resources\SpecialistResource\RelationManagers;
-use App\Models\Specialist;
+use App\Filament\Resources\TitleResource\Pages;
+use App\Filament\Resources\TitleResource\RelationManagers;
+use App\Models\Title;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Navigation\NavigationItem;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class SpecialistResource extends Resource
+class TitleResource extends Resource
 {
-    protected static ?string $model = Specialist::class;
-
-    protected static ?string $slug = 'master-data/customers/specialists';
+    protected static ?string $model = Title::class;
+    protected static ?string $slug = 'master-data/customers/titles';
     protected static ?string $navigationIcon = 'heroicon-o-academic-cap';
-    protected static ?string $navigationLabel = 'Specialist';
+    protected static ?string $navigationLabel = 'Title';
     protected static ?string $navigationGroup = 'Master Data';
 
     public static function form(Form $form): Form
@@ -50,13 +50,13 @@ class SpecialistResource extends Resource
             ])
             ->filters([
                 // Tables\Filters\SelectFilter::make('name')
-                //     ->options(fn () => \App\Models\Specialist::pluck('name', 'id'))
+                //     ->options(fn () => \App\Models\Title::pluck('name', 'id'))
                 //     ->searchable(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
                     ->label('')
-                    ->modalHeading('Edit Specialist'),
+                    ->modalHeading('Edit Title'),
                     // ->slideOver(),
                 Tables\Actions\DeleteAction::make()
                     ->label(''),
@@ -84,7 +84,7 @@ class SpecialistResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageSpecialists::route('/'),
+            'index' => Pages\ManageTitle::route('/'),
         ];
     }
 }
