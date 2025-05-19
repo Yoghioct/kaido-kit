@@ -6,17 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Specialist extends Model
+class Title extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'customer_specialists';
+    protected $table = 'customer_titles';
 
-    protected $fillable = [
-        'name',
-    ];
-
-    protected $hidden = ['created_at', 'updated_at'];
+    protected $fillable = ['name'];
 
     public function customers()
     {

@@ -3,7 +3,7 @@
 namespace App\Policies;
 
 use App\Models\User;
-use App\Models\Doctor;
+use App\Models\Customer;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class DoctorPolicy
@@ -21,7 +21,7 @@ class DoctorPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Doctor $doctor): bool
+    public function view(User $user, Customer $doctor): bool
     {
         return $user->can('view_doctor');
     }
@@ -37,7 +37,7 @@ class DoctorPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Doctor $doctor): bool
+    public function update(User $user, Customer $doctor): bool
     {
         return $user->can('update_doctor');
     }
@@ -45,7 +45,7 @@ class DoctorPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Doctor $doctor): bool
+    public function delete(User $user, Customer $doctor): bool
     {
         return $user->can('delete_doctor');
     }
@@ -61,7 +61,7 @@ class DoctorPolicy
     /**
      * Determine whether the user can permanently delete.
      */
-    public function forceDelete(User $user, Doctor $doctor): bool
+    public function forceDelete(User $user, Customer $doctor): bool
     {
         return $user->can('force_delete_doctor');
     }
@@ -77,7 +77,7 @@ class DoctorPolicy
     /**
      * Determine whether the user can restore.
      */
-    public function restore(User $user, Doctor $doctor): bool
+    public function restore(User $user, Customer $doctor): bool
     {
         return $user->can('restore_doctor');
     }
@@ -93,7 +93,7 @@ class DoctorPolicy
     /**
      * Determine whether the user can replicate.
      */
-    public function replicate(User $user, Doctor $doctor): bool
+    public function replicate(User $user, Customer $doctor): bool
     {
         return $user->can('replicate_doctor');
     }

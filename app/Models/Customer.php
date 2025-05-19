@@ -6,29 +6,31 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Doctor extends Model
+class Customer extends Model
 {
     use HasFactory, SoftDeletes;
 
-    // add fillable
+    protected $table = 'customers';
+
     protected $fillable = [
         'code',
-        'name',
-        'gender',
-        'status',
+        'prefix_title',
+        'full_name',
+        'suffix_title',
         'specialist_id',
+        'title_id',
+        'is_kpdm'
     ];
-    // add guaded
-    protected $guarded = ['id'];
-    // add hidden
-    protected $hidden = ['created_at', 'updated_at'];
 
-    protected $casts = [
-        'status' => 'boolean',
-    ];
+    protected $hidden = ['created_at', 'updated_at'];
 
     public function specialist()
     {
         return $this->belongsTo(Specialist::class);
+    }
+
+    public function title()
+    {
+        return $this->belongsTo(Title::class);
     }
 }

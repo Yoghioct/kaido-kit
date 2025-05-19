@@ -17,18 +17,10 @@ class SpecialistResource extends Resource
 {
     protected static ?string $model = Specialist::class;
 
+    protected static ?string $slug = 'master-data/customers/specialists';
     protected static ?string $navigationIcon = 'heroicon-o-academic-cap';
-
+    protected static ?string $navigationLabel = 'Specialist';
     protected static ?string $navigationGroup = 'Master Data';
-
-    protected static ?int $navigationSort = 2;
-
-    protected static ?string $recordTitleAttribute = 'name';
-
-    protected static ?string $slug = 'master-data/specialists';
-
-    protected static ?string $title = 'Specialist Management';
-
 
     public static function form(Form $form): Form
     {
@@ -37,9 +29,6 @@ class SpecialistResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255)
-                    ->columnSpanFull(),
-                Forms\Components\Textarea::make('description')
-                    ->maxLength(65535)
                     ->columnSpanFull(),
             ]);
     }
@@ -50,7 +39,6 @@ class SpecialistResource extends Resource
              ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('description'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
