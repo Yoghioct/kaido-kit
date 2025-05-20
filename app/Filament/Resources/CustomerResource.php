@@ -25,31 +25,90 @@ class CustomerResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                //
-            ]);
+        ->schema([
+            Forms\Components\TextInput::make('code')
+                ->required()
+                ->unique(ignoreRecord: true)
+                ->maxLength(255),
+            Forms\Components\TextInput::make('prefix_title')
+                ->label('Prefix Title')
+                ->maxLength(255),
+            Forms\Components\TextInput::make('full_name')
+                ->required()
+                ->maxLength(255),
+            Forms\Components\TextInput::make('suffix_title')
+                ->label('Suffix Title')
+                ->maxLength(255),
+            Forms\Components\Select::make('specialist_id')
+                ->relationship('specialist', 'name')
+                ->searchable()
+                ->preload(),
+            Forms\Components\Select::make('title_id')
+                ->relationship('title', 'name')
+                ->searchable()
+                ->preload(),
+            Forms\Components\Toggle::make('is_kpdm')
+                ->label('Is KPDM')
+                ->default(false),
+        ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('code')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('prefix_title')
+                    ->label('Prefix Title')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('full_name')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('suffix_title')
+                    ->label('Suffix Title')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('specialist.name')
+                    ->label('Specialist'),
+                Tables\Columns\TextColumn::make('title.name')
+                    ->label('Title'),
+                Tables\Columns\IconColumn::make('is_kpdm')
+                    ->label('KPDM')
+                    ->boolean(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('specialist_id')
+                    ->relationship('specialist', 'name')
+                    ->label('Specialist'),
+                Tables\Filters\SelectFilter::make('title_id')
+                    ->relationship('title', 'name')
+                    ->label('Title'),
+                Tables\Filters\TernaryFilter::make('is_kpdm')
+                    ->label('KPDM'),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
-   Tables\Actions\DeleteAction::make(),
-
+                Tables\Actions\EditAction::make()
+                    ->label('')
+                    ->modalHeading('Edit Customer'),
+                Tables\Actions\DeleteAction::make()
+                    ->label(''),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->recordUrl(null)
+            ->recordAction(null)
+            ->striped()
+            ->deferLoading();
     }
 
     public static function getPages(): array
