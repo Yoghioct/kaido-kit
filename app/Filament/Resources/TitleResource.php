@@ -17,10 +17,10 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class TitleResource extends Resource
 {
     protected static ?string $model = Title::class;
-    protected static ?string $slug = 'master-data/customers/titles';
-    protected static ?string $navigationIcon = 'heroicon-o-academic-cap';
-    protected static ?string $navigationLabel = 'Title';
+    protected static ?string $modelLabel = 'Title';
+    protected static ?string $navigationLabel = 'Titles';
     protected static ?string $navigationGroup = 'Master Data';
+    protected static ?string $navigationParentItem = 'Customers';
 
     public static function form(Form $form): Form
     {

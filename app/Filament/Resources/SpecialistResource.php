@@ -16,11 +16,10 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class SpecialistResource extends Resource
 {
     protected static ?string $model = Specialist::class;
-
-    protected static ?string $slug = 'master-data/customers/specialists';
-    protected static ?string $navigationIcon = 'heroicon-o-academic-cap';
-    protected static ?string $navigationLabel = 'Specialist';
+    protected static ?string $modelLabel = 'Specialist';
+    protected static ?string $navigationLabel = 'Specialists';
     protected static ?string $navigationGroup = 'Master Data';
+    protected static ?string $navigationParentItem = 'Customers';
 
     public static function form(Form $form): Form
     {

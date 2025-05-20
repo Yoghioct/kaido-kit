@@ -23,7 +23,11 @@ body {
     display: none !important;
 }
 
+.fi-sidebar-item-active .fi-sidebar-item-grouped-border .relative{
+    background-color: white !important;
+}
 
-.fi-dropdown-list:nth-child(2) {
-    display: none !important;
+.fi-sidebar-item.fi-sidebar-item-active a:hover {
+    --tw-bg-opacity: 1 !important;
+    background-color: rgba(var(--primary-500), var(--tw-bg-opacity)) !important;
 }
