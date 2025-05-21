@@ -22,7 +22,11 @@ class Customer extends Model
         'is_kpdm'
     ];
 
-    protected $hidden = ['created_at', 'updated_at'];
+    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+
+    protected $casts = [
+        'is_kpdm' => 'boolean'
+    ];
 
     public function specialist()
     {
@@ -32,5 +36,22 @@ class Customer extends Model
     public function title()
     {
         return $this->belongsTo(Title::class, 'customer_title_id');
+    }
+
+    public function customerAffiliations()
+    {
+        return $this->hasMany(CustomerAffiliation::class);
+    }
+
+    public function branches()
+    {
+        return $this->belongsToMany(Branch::class, 'customer_affiliations')
+            ->withTimestamps();
+    }
+
+    public function outlets()
+    {
+        return $this->belongsToMany(Outlet::class, 'customer_affiliations')
+            ->withTimestamps();
     }
 }

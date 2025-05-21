@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\BranchResource\Pages;
-use App\Filament\Resources\BranchResource\RelationManagers;
-use App\Models\Branch;
+use App\Filament\Resources\OutletResource\Pages;
+use App\Filament\Resources\OutletResource\RelationManagers;
+use App\Models\Outlet;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,9 +13,9 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class BranchResource extends Resource
+class OutletResource extends Resource
 {
-    protected static ?string $model = Branch::class;
+    protected static ?string $model = Outlet::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -27,14 +27,19 @@ class BranchResource extends Resource
                     ->required()
                     ->maxLength(255)
                     ->columnSpanFull(),
-                Forms\Components\TextInput::make('code')
-                    ->required()
+                Forms\Components\Textarea::make('address')
+                    ->maxLength(255)
+                    ->columnSpanFull(),
+                Forms\Components\TextInput::make('lat')
                     ->maxLength(255),
-                Forms\Components\Select::make('region_id')
-                    ->relationship('region', 'name')
+                Forms\Components\TextInput::make('long')
+                    ->maxLength(255),
+                Forms\Components\Select::make('outlet_group_id')
+                    ->relationship('outletGroup', 'name')
                     ->searchable()
                     ->preload()
-                    ->required(),
+                    ->required()
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -44,11 +49,16 @@ class BranchResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('code')
+                Tables\Columns\TextColumn::make('address')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('region.name')
-                    ->label('Region')
+                Tables\Columns\TextColumn::make('lat')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('long')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('outletGroup.name')
+                    ->label('Outlet Group')
+                    ->searchable()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -67,8 +77,7 @@ class BranchResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
-                    ->label('')
-                    ->modalHeading('Edit Branch'),
+                    ->label(''),
                 Tables\Actions\DeleteAction::make()
                     ->label(''),
             ])
@@ -76,18 +85,13 @@ class BranchResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ])
-            ->recordUrl(null)
-            ->recordAction(null)
-            ->striped()
-            // ->hoverable()
-            ->deferLoading();
+            ]);
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageBranches::route('/'),
+            'index' => Pages\ManageOutlets::route('/'),
         ];
     }
 }

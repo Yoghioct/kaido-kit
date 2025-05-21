@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\BranchResource\Pages;
-use App\Filament\Resources\BranchResource\RelationManagers;
-use App\Models\Branch;
+use App\Filament\Resources\OutletGroupResource\Pages;
+use App\Filament\Resources\OutletGroupResource\RelationManagers;
+use App\Models\OutletGroup;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,9 +13,9 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class BranchResource extends Resource
+class OutletGroupResource extends Resource
 {
-    protected static ?string $model = Branch::class;
+    protected static ?string $model = OutletGroup::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -27,14 +27,6 @@ class BranchResource extends Resource
                     ->required()
                     ->maxLength(255)
                     ->columnSpanFull(),
-                Forms\Components\TextInput::make('code')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\Select::make('region_id')
-                    ->relationship('region', 'name')
-                    ->searchable()
-                    ->preload()
-                    ->required(),
             ]);
     }
 
@@ -43,11 +35,6 @@ class BranchResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('code')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('region.name')
-                    ->label('Region')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -67,27 +54,22 @@ class BranchResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
-                    ->label('')
-                    ->modalHeading('Edit Branch'),
+                    ->label(''),
                 Tables\Actions\DeleteAction::make()
                     ->label(''),
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ])
-            ->recordUrl(null)
-            ->recordAction(null)
-            ->striped()
-            // ->hoverable()
-            ->deferLoading();
+            ]);
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageBranches::route('/'),
+            'index' => Pages\ManageOutletGroups::route('/'),
         ];
     }
 }
