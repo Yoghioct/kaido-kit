@@ -6,21 +6,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Specialist extends Model
+class OutletGroup extends Model
 {
+    /** @use HasFactory<\Database\Factories\ContactFactory> */
     use HasFactory, SoftDeletes;
 
-    protected $table = 'customer_specialists';
-
-    protected $fillable = [
-        'name',
-        'specialist_title'
-    ];
-
+    // add fillable
+    protected $fillable = ['name'];
+    // add guaded
+    protected $guarded = ['id'];
+    // add hidden
     protected $hidden = ['created_at', 'updated_at'];
-
-    public function customers()
-    {
-        return $this->hasMany(Customer::class);
-    }
 }

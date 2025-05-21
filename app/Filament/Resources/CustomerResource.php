@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\CustomerResource\Pages;
 use App\Filament\Resources\CustomerResource\RelationManagers;
 use App\Models\Customer;
+use App\Models\Specialist;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -31,18 +32,32 @@ class CustomerResource extends Resource
                 ->maxLength(255),
             Forms\Components\TextInput::make('prefix_title')
                 ->label('Prefix Title')
-                ->maxLength(255),
+                ->maxLength(255)
+                ->default('dr.'),
             Forms\Components\TextInput::make('full_name')
                 ->required()
                 ->maxLength(255),
+            Forms\Components\Select::make('customer_specialist_id')
+                ->relationship('specialist', 'name')
+                ->searchable()
+                ->preload()
+                ->reactive()
+                ->afterStateUpdated(function ($state, callable $set) {
+                    if ($state) {
+                        $specialist = Specialist::find($state);
+                        if ($specialist) {
+                            $set('suffix_title', $specialist->specialist_title);
+                        }
+                    }
+                }),
+
+
             Forms\Components\TextInput::make('suffix_title')
                 ->label('Suffix Title')
                 ->maxLength(255),
-            Forms\Components\Select::make('specialist_id')
-                ->relationship('specialist', 'name')
-                ->searchable()
-                ->preload(),
-            Forms\Components\Select::make('title_id')
+
+            Forms\Components\Select::make('customer_title_id')
+                ->required()
                 ->relationship('title', 'name')
                 ->searchable()
                 ->preload(),
@@ -83,10 +98,10 @@ class CustomerResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('specialist_id')
+                Tables\Filters\SelectFilter::make('customer_specialist_id')
                     ->relationship('specialist', 'name')
                     ->label('Specialist'),
-                Tables\Filters\SelectFilter::make('title_id')
+                Tables\Filters\SelectFilter::make('customer_title_id')
                     ->relationship('title', 'name')
                     ->label('Title'),
                 Tables\Filters\TernaryFilter::make('is_kpdm')

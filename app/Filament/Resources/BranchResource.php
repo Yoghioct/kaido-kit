@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\SpecialistResource\Pages;
-use App\Filament\Resources\SpecialistResource\RelationManagers;
-use App\Models\Specialist;
+use App\Filament\Resources\BranchResource\Pages;
+use App\Filament\Resources\BranchResource\RelationManagers;
+use App\Models\Branch;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,13 +13,11 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class SpecialistResource extends Resource
+class BranchResource extends Resource
 {
-    protected static ?string $model = Specialist::class;
-    protected static ?string $modelLabel = 'Specialist';
-    protected static ?string $navigationLabel = 'Specialists';
-    protected static ?string $navigationGroup = 'Master Data';
-    protected static ?string $navigationParentItem = 'Customers';
+    protected static ?string $model = Branch::class;
+
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
@@ -27,22 +25,28 @@ class SpecialistResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->required()
-                    ->maxLength(255)
-                    ->columnSpanFull(),
-                Forms\Components\TextInput::make('specialist_title')
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('code')
                     ->required()
-                    ->maxLength(255)
-                    ->columnSpanFull(),
+                    ->maxLength(255),
+                Forms\Components\Select::make('region_id')
+                    ->relationship('region', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->required(),
             ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
-             ->columns([
+            ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('specialist_title')
+                Tables\Columns\TextColumn::make('code')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('region.name')
+                    ->label('Region')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -52,17 +56,18 @@ class SpecialistResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('deleted_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                // Tables\Filters\SelectFilter::make('name')
-                //     ->options(fn () => \App\Models\Specialist::pluck('name', 'id'))
-                //     ->searchable(),
+                //
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
                     ->label('')
-                    ->modalHeading('Edit Specialist'),
-                    // ->slideOver(),
+                    ->modalHeading('Edit Branch'),
                 Tables\Actions\DeleteAction::make()
                     ->label(''),
             ])
@@ -70,26 +75,13 @@ class SpecialistResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ])
-            ->recordUrl(null)
-            ->recordAction(null)
-            ->striped()
-            // ->hoverable()
-            ->deferLoading();
-
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
+            ]);
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageSpecialists::route('/'),
+            'index' => Pages\ManageBranches::route('/'),
         ];
     }
 }

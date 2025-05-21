@@ -17,8 +17,8 @@ class Customer extends Model
         'prefix_title',
         'full_name',
         'suffix_title',
-        'specialist_id',
-        'title_id',
+        'customer_specialist_id',
+        'customer_title_id',
         'is_kpdm'
     ];
 
@@ -26,11 +26,11 @@ class Customer extends Model
 
     public function specialist()
     {
-        return $this->belongsTo(Specialist::class);
+        return $this->belongsTo(Specialist::class, 'customer_specialist_id');
     }
 
     public function title()
     {
-        return $this->belongsTo(Title::class);
+        return $this->belongsTo(Title::class, 'customer_title_id');
     }
 }

@@ -19,6 +19,11 @@ body {
     display: none !important;
 }
 
+.fi-dropdown-panel .fi-dropdown-list:nth-of-type(2):has(.fi-theme-switcher-btn) {
+    background-color: red !important;
+    display: none !important;
+}
+
 .fi-simple-header-heading {
     display: none !important;
 }

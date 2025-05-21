@@ -11,23 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Create new tables
-        Schema::create('customers', function (Blueprint $table) {
-            $table->id();
-            $table->string('code')->unique();
-            $table->string('prefix_title')->nullable();       // gelar_depan
-            $table->string('full_name');
-            $table->string('suffix_title')->nullable();       // gelar_belakang
-            $table->string('specialist_id')->nullable();
-            $table->string('title_id')->nullable();           // jabatan
-            $table->boolean('is_kpdm')->default(false);       // 0 = doctor, 1 = KPDM
-            $table->timestamps();
-            $table->softDeletes();
-        });
+
+        // Drop old tables if they exist
+        Schema::dropIfExists('doctors');
+        Schema::dropIfExists('specialists');
 
         Schema::create('customer_specialists', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('doctor_titles');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -39,32 +31,94 @@ return new class extends Migration
             $table->softDeletes();
         });
 
-        Schema::create('branches', function (Blueprint $table) {
+        Schema::create('customers', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('code')->unique();
+            $table->string('prefix_title')->nullable();
+            $table->string('full_name');
+            $table->string('suffix_title')->nullable();
+            $table->foreignId('customer_specialist_id')
+                ->nullable() // ← tambahkan ini
+                ->constrained('customer_specialists')
+                ->onDelete('set null');
+
+            $table->foreignId('customer_title_id')
+                ->nullable() // ← tambahkan ini juga
+                ->constrained('customer_titles')
+                ->onDelete('set null');
+
+            $table->boolean('is_kpdm')->default(false);
             $table->timestamps();
             $table->softDeletes();
         });
+
+
+        if (!Schema::hasTable('regions')) {
+            Schema::create('regions', function (Blueprint $table) {
+                $table->id();
+                $table->string('name');
+                $table->timestamps();
+                $table->softDeletes();
+            });
+        }
+
+        Schema::create('branches', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('code');
+            $table->foreignId('region_id')
+                ->nullable() // ← tambahkan ini
+                ->constrained('regions')
+                ->onDelete('set null');
+
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+        if (!Schema::hasTable('outlet_groups')) {
+            Schema::create('outlet_groups', function (Blueprint $table) {
+                $table->id();
+                $table->string('name');
+                $table->timestamps();
+                $table->softDeletes();
+            });
+        }
 
         Schema::create('outlets', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('address')->nullable();
+            $table->string('lat')->nullable();
+            $table->string('long')->nullable();
+            // $table->foreignId('outlet_group_id')->constrained('outlet_groups')->onDelete('set null')->nullable();
+
+            $table->foreignId('outlet_group_id')
+                ->nullable() // ← tambahkan ini
+                ->constrained('outlet_groups')
+                ->onDelete('set null');
             $table->timestamps();
             $table->softDeletes();
         });
+
+        if (!Schema::hasTable('outlet_affiliations')) {
+            Schema::create('outlet_affiliations', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('outlet_id')->nullable()->constrained('outlets')->onDelete('set null')->nullable();
+                $table->foreignId('branch_id')->nullable()->constrained('branches')->onDelete('set null')->nullable();
+                $table->timestamps();
+                $table->softDeletes();
+            });
+        }
 
         Schema::create('customer_affiliations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('customer_id')->constrained()->onDelete('cascade');
-            $table->foreignId('branch_id')->constrained()->onDelete('cascade');
-            $table->foreignId('outlet_id')->constrained()->onDelete('cascade');
+            $table->foreignId('customer_id')->nullable()->constrained('customers')->onDelete('set null')->nullable();
+            $table->foreignId('branch_id')->nullable()->constrained('branches')->onDelete('set null')->nullable();
+            $table->foreignId('outlet_id')->nullable()->constrained('outlets')->onDelete('set null')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
 
-        // Drop old tables if they exist
-        Schema::dropIfExists('doctors');
-        Schema::dropIfExists('specialists');
     }
 
     /**
