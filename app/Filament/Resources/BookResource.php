@@ -87,8 +87,8 @@ class BookResource extends Resource implements HasShieldPermissions
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                ables\Actions\EditAction::make()->label(''),
+                Tables\Actions\DeleteAction::make()->label(''),
 
             ])
             ->headerActions([

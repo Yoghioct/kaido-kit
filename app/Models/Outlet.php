@@ -13,6 +13,7 @@ class Outlet extends Model
     protected $table = 'outlets';
 
     protected $fillable = [
+        'code',
         'name',
         'address',
         'lat',

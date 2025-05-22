@@ -32,20 +32,26 @@ class {{ resourceClass }} extends Resource
         return $table
             ->columns([
 {{ tableColumns }}
+
             ])
             ->filters([
 {{ tableFilters }}
             ])
             ->actions([
 {{ tableActions }}
-   Tables\Actions\DeleteAction::make(),
+   Tables\Actions\DeleteAction::make()->label(''),
+
 
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
 {{ tableBulkActions }}
                 ]),
-            ]);
+            ])
+            ->recordUrl(null)
+            ->recordAction(null)
+            ->striped()
+            ->deferLoading();
     }
 {{ relations }}
     public static function getPages(): array

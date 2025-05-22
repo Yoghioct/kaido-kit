@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\OutletResource\Pages;
-use App\Filament\Resources\OutletResource\RelationManagers;
-use App\Models\Outlet;
+use App\Filament\Resources\ProductResource\Pages;
+use App\Filament\Resources\ProductResource\RelationManagers;
+use App\Models\Product;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,9 +13,9 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class OutletResource extends Resource
+class ProductResource extends Resource
 {
-    protected static ?string $model = Outlet::class;
+    protected static ?string $model = Product::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -26,23 +26,15 @@ class OutletResource extends Resource
                 Forms\Components\TextInput::make('code')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\Select::make('outlet_group_id')
-                    ->relationship('outletGroup', 'name')
-                    ->searchable()
-                    ->preload()
-                    ->required(),
                 Forms\Components\TextInput::make('name')
                     ->required()
-                    ->maxLength(255)
-                    ->columnSpanFull(),
-                Forms\Components\Textarea::make('address')
-                    ->maxLength(255)
-                    ->columnSpanFull(),
-                Forms\Components\TextInput::make('lat')
                     ->maxLength(255),
-                Forms\Components\TextInput::make('long')
+                Forms\Components\TextInput::make('alias')
                     ->maxLength(255),
-
+                Forms\Components\Select::make('product_group_id')
+                    ->relationship('productGroup', 'name'),
+                Forms\Components\Select::make('product_sub_group_id')
+                    ->relationship('productSubGroup', 'name'),
             ]);
     }
 
@@ -54,16 +46,18 @@ class OutletResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('outletGroup.name')
-                    ->label('Outlet Group')
-                    ->searchable()
+                Tables\Columns\TextColumn::make('alias')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('productGroup.name')
+                    ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('address')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('lat')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('long')
-                    ->searchable(),
+                Tables\Columns\TextColumn::make('productSubGroup.name')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('deleted_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -72,19 +66,15 @@ class OutletResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('deleted_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make()
-                    ->label(''),
-                Tables\Actions\DeleteAction::make()
-                    ->label(''),
+                Tables\Actions\EditAction::make()->label(''),
+                Tables\Actions\DeleteAction::make()->label(''),
+   Tables\Actions\DeleteAction::make()->label(''),
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -96,7 +86,7 @@ class OutletResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageOutlets::route('/'),
+            'index' => Pages\ManageProducts::route('/'),
         ];
     }
 }
