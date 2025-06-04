@@ -62,8 +62,6 @@ class ProductIndicationResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make()->label(''),
                 Tables\Actions\DeleteAction::make()->label(''),
-   Tables\Actions\DeleteAction::make()->label(''),
-
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

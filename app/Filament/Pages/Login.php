@@ -32,11 +32,13 @@ class Login extends BaseLogin
         // $user = \App\Models\User::where('email', $data['email'])->first();
         $user = \App\Models\User::where('username', $data['login'])->orWhere('email', $data['login'])->first();
 
+
         if ($user && is_null($user->password)) {
             throw ValidationException::withMessages([
                 'data.email' => 'This account was created using social login. Please login with Google.',
             ]);
         }
+
 
         if (! Filament::auth()->attempt($this->getCredentialsFromFormData($data), $data['remember'] ?? false)) {
             $this->throwFailureValidationException();
@@ -58,16 +60,16 @@ class Login extends BaseLogin
         return app(LoginResponse::class);
     }
 
-    public function mount(): void
-    {
-        parent::mount();
+    // public function mount(): void
+    // {
+    //     parent::mount();
 
-        $this->form->fill([
-            'email' => 'admin@admin.com',
-            'password' => 'password',
-            'remember' => true,
-        ]);
-    }
+    //     $this->form->fill([
+    //         'email' => 'admin@admin.com',
+    //         'password' => 'password',
+    //         'remember' => true,
+    //     ]);
+    // }
     /**
      * @return array<int | string, string | Form>
      */

@@ -49,9 +49,26 @@ class UserResource extends Resource
                 )->schema([
                             TextInput::make('name')
                                 ->required(),
+                            TextInput::make('username')
+                                ->required(),
                             TextInput::make('email')
                                 ->required(),
                             TextInput::make('password')
+                                ->password()
+                                ->dehydrated(fn ($state) => filled($state))
+                                ->required(fn (string $operation): bool => $operation === 'create')
+                                ->same('password_confirmation')
+                                ->minLength(8),
+                            TextInput::make('password_confirmation')
+                                ->password()
+                                ->dehydrated(false)
+                                ->required(fn (string $operation): bool => $operation === 'create')
+                                ->minLength(8),
+                            Select::make('roles')
+                                ->relationship('roles', 'name')
+                                // ->multiple()
+                                ->preload()
+                                ->searchable()
                                 ->required(),
                         ]),
             ]);
@@ -118,22 +135,22 @@ class UserResource extends Resource
                 // impersonate action
                 Impersonate::make()
                     ->label('')
-                    ->icon('heroicon-o-key'),
+                    ->icon('heroicon-o-arrow-right-start-on-rectangle'),
                 Tables\Actions\EditAction::make()
                     ->label(''),
-                Action::make('Set Role')
-                    ->icon('heroicon-m-adjustments-vertical')
-                    ->label('')
-                    ->form([
-                        Select::make('role')
-                            ->relationship('roles', 'name')
-                            ->multiple()
-                            ->required()
-                            ->searchable()
-                            ->preload()
-                            ->optionsLimit(10)
-                            ->getOptionLabelFromRecordUsing(fn($record) => $record->name),
-                    ]),
+                // Action::make('Set Role')
+                //     ->icon('heroicon-m-adjustments-vertical')
+                //     ->label('')
+                //     ->form([
+                //         Select::make('role')
+                //             ->relationship('roles', 'name')
+                //             ->multiple()
+                //             ->required()
+                //             ->searchable()
+                //             ->preload()
+                //             ->optionsLimit(10)
+                //             ->getOptionLabelFromRecordUsing(fn($record) => $record->name),
+                //     ]),
                 // Impersonate::make(),
                 Tables\Actions\DeleteAction::make()
                     ->label(''),

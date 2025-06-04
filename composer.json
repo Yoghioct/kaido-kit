@@ -14,6 +14,7 @@
     "require": {
         "php": "^8.2",
         "bezhansalleh/filament-shield": "^3.3",
+        "cheesegrits/filament-google-maps": "^3.0",
         "dedoc/scramble": "^0.12.10",
         "dutchcodingcompany/filament-socialite": "^2.3",
         "filament/filament": "^3.2",
