@@ -24,7 +24,8 @@ class ManageSetting extends SettingsPage
 
     protected static ?string $title = 'Web Setting';
 
-    protected static ?string $slug = 'settings/web';
+    // protected static ?string $slug = 'settings/web';
+    protected static ?string $slug = 'web-setting';
 
     protected static ?int $navigationSort = 4;
 

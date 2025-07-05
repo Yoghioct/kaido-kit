@@ -17,7 +17,10 @@ class ProductSubGroupResource extends Resource
 {
     protected static ?string $model = ProductSubGroup::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $modelLabel = 'Product Sub Group';
+    protected static ?string $navigationLabel = 'Product Sub Groups';
+    protected static ?string $navigationGroup = 'Master Data';
+    protected static ?string $navigationParentItem = 'Products';
 
     public static function form(Form $form): Form
     {

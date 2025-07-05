@@ -17,7 +17,10 @@ class OutletGroupResource extends Resource
 {
     protected static ?string $model = OutletGroup::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $modelLabel = 'Outlet Group';
+    protected static ?string $navigationLabel = 'Outlet Groups';
+    protected static ?string $navigationGroup = 'Master Data';
+    protected static ?string $navigationParentItem = 'Outlets';
 
     public static function form(Form $form): Form
     {

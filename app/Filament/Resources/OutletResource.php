@@ -18,7 +18,10 @@ class OutletResource extends Resource
 {
     protected static ?string $model = Outlet::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationLabel = 'Outlets';
+    protected static ?string $navigationGroup = 'Master Data';
+    protected static ?string $navigationIcon = 'heroicon-o-building-office';
+    protected static ?string $modelLabel = 'Outlet';
 
     public static function form(Form $form): Form
     {

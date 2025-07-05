@@ -18,7 +18,10 @@ class TeamResource extends Resource
 {
     protected static ?string $model = Team::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationLabel = 'Teams';
+    protected static ?string $navigationGroup = 'Master Data';
+    protected static ?string $navigationIcon = 'heroicon-o-user-group';
+    protected static ?string $modelLabel = 'Team';
 
     public static function form(Form $form): Form
     {
@@ -61,7 +64,8 @@ class TeamResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('productGroups.name')
                     ->label('Product Groups')
-                    ->listWithLineBreaks()
+                    // ->listWithLineBreaks()
+                    // ->isListWithLineBreaks(false)
                     ->searchable(),
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()

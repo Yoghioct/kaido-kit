@@ -17,7 +17,10 @@ class RegionResource extends Resource
 {
     protected static ?string $model = Region::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationLabel = 'Regions';
+    protected static ?string $navigationGroup = 'Master Data';
+    protected static ?string $navigationIcon = 'heroicon-o-globe-europe-africa';
+    protected static ?string $modelLabel = 'Region';
 
     public static function shouldRegisterNavigation(): bool
     {

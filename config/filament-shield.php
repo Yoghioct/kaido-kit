@@ -3,7 +3,8 @@
 return [
     'shield_resource' => [
         'should_register_navigation' => true,
-        'slug' => 'settings/roles',
+        // 'slug' => 'settings/roles',
+        'slug' => 'roles',
         // 'navigation_sort' => -1,
         'navigation_sort' => 2,
         'navigation_badge' => true,

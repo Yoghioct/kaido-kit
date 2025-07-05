@@ -28,17 +28,22 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-users';
-
+    protected static ?string $navigationLabel = 'Users';
     protected static ?string $navigationGroup = 'Settings';
+    protected static ?string $navigationIcon = 'heroicon-o-users';
+    protected static ?string $modelLabel = 'User';
 
-    protected static ?int $navigationSort = 1;
+    // protected static ?string $navigationIcon = 'heroicon-o-users';
 
-    protected static ?string $recordTitleAttribute = 'name';
+    // protected static ?string $navigationGroup = 'Settings';
 
-    protected static ?string $slug = 'settings/users';
+    // protected static ?int $navigationSort = 1;
 
-    protected static ?string $title = 'User Management';
+    // protected static ?string $recordTitleAttribute = 'name';
+
+    // protected static ?string $slug = 'settings/users';
+
+    // protected static ?string $title = 'User Management';
 
     public static function form(Form $form): Form
     {
@@ -53,6 +58,14 @@ class UserResource extends Resource
                                 ->required(),
                             TextInput::make('email')
                                 ->required(),
+                            TextInput::make('phone_number')
+                                ->required(),
+                            Select::make('roles')
+                                ->relationship('roles', 'name')
+                                // ->multiple()
+                                ->preload()
+                                ->searchable()
+                                ->required(),
                             TextInput::make('password')
                                 ->password()
                                 ->dehydrated(fn ($state) => filled($state))
@@ -64,12 +77,7 @@ class UserResource extends Resource
                                 ->dehydrated(false)
                                 ->required(fn (string $operation): bool => $operation === 'create')
                                 ->minLength(8),
-                            Select::make('roles')
-                                ->relationship('roles', 'name')
-                                // ->multiple()
-                                ->preload()
-                                ->searchable()
-                                ->required(),
+
                         ]),
             ]);
     }
@@ -86,6 +94,8 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('phone_number')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('username')
                     ->searchable(),

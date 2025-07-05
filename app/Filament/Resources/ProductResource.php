@@ -17,7 +17,11 @@ class ProductResource extends Resource
 {
     protected static ?string $model = Product::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
+    protected static ?string $navigationLabel = 'Products';
+    protected static ?string $navigationGroup = 'Master Data';
+    protected static ?string $navigationIcon = 'heroicon-o-squares-2x2';
+    protected static ?string $modelLabel = 'Product';
 
     public static function form(Form $form): Form
     {
@@ -73,8 +77,6 @@ class ProductResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make()->label(''),
                 Tables\Actions\DeleteAction::make()->label(''),
-   Tables\Actions\DeleteAction::make()->label(''),
-
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

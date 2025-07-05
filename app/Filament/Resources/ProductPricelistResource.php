@@ -21,7 +21,10 @@ class ProductPricelistResource extends Resource
 {
     protected static ?string $model = ProductPricelist::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $modelLabel = 'Product Price List';
+    protected static ?string $navigationLabel = 'Product Price Lists';
+    protected static ?string $navigationGroup = 'Master Data';
+    protected static ?string $navigationParentItem = 'Products';
 
     public static function form(Form $form): Form
     {
