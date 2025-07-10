@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\ProductGroupResource\Pages;
-use App\Filament\Resources\ProductGroupResource\RelationManagers;
-use App\Models\ProductGroup;
+use App\Filament\Resources\ProductGroupClusterResource\Pages;
+use App\Filament\Resources\ProductGroupClusterResource\RelationManagers;
+use App\Models\ProductGroupCluster;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,12 +13,12 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class ProductGroupResource extends Resource
+class ProductGroupClusterResource extends Resource
 {
-    protected static ?string $model = ProductGroup::class;
+    protected static ?string $model = ProductGroupCluster::class;
 
-    protected static ?string $modelLabel = 'Product Group';
-    protected static ?string $navigationLabel = 'Product Groups';
+    protected static ?string $modelLabel = 'Product Group Cluster';
+    protected static ?string $navigationLabel = 'Product Group Clusters';
     protected static ?string $navigationGroup = 'Master Data';
     protected static ?string $navigationParentItem = 'Products';
 
@@ -28,7 +28,18 @@ class ProductGroupResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->required()
+                    ->columnSpanFull()
                     ->maxLength(255),
+                Forms\Components\Textarea::make('description')
+                    ->columnSpanFull()
+                    ->maxLength(65535),
+                Forms\Components\Select::make('product_groups')
+                    ->label('Product Groups')
+                    ->columnSpanFull()
+                    ->multiple()
+                    ->relationship('productGroups', 'name')
+                    ->preload()
+                    ->searchable(),
             ]);
     }
 
@@ -37,6 +48,14 @@ class ProductGroupResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('description')
+                    ->limit(50)
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('productGroups.name')
+                    ->label('Product Groups')
+                    ->badge()
+                    ->separator(',')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()
@@ -55,9 +74,12 @@ class ProductGroupResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make()->label(''),
+                Tables\Actions\EditAction::make()
+                    ->label('')
+                    ->modalHeading('Edit Product Group Cluster')
+                    ->modalDescription('Update the product group cluster information.')
+                    ->modalSubmitActionLabel('Update Cluster'),
                 Tables\Actions\DeleteAction::make()->label(''),
-
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -69,7 +91,7 @@ class ProductGroupResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageProductGroups::route('/'),
+            'index' => Pages\ManageProductGroupClusters::route('/'),
         ];
     }
 }

@@ -12,7 +12,10 @@ class TeamAffiliation extends Model
 
     protected $fillable = [
         'team_id',
-        'product_group_id',
+        'product_group_cluster_id',
+        'target_dfr',
+        'target_profiling',
+        'target_master_call_list',
     ];
 
     public function team(): BelongsTo
@@ -20,8 +23,14 @@ class TeamAffiliation extends Model
         return $this->belongsTo(Team::class);
     }
 
-    public function productGroup(): BelongsTo
+    public function productGroupCluster(): BelongsTo
     {
-        return $this->belongsTo(ProductGroup::class);
+        return $this->belongsTo(ProductGroupCluster::class);
+    }
+
+    // Helper method to get all product groups in this cluster
+    public function getProductGroupsAttribute()
+    {
+        return $this->productGroupCluster?->productGroups ?? collect();
     }
 }

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Team extends Model
 {
@@ -19,8 +20,16 @@ class Team extends Model
         return $this->hasMany(TeamAffiliation::class);
     }
 
-    public function productGroups()
+    public function productGroupClusters(): BelongsToMany
     {
-        return $this->belongsToMany(ProductGroup::class, 'team_affiliations');
+        return $this->belongsToMany(ProductGroupCluster::class, 'team_affiliations');
+    }
+
+    // Helper method to get all product groups through clusters
+    public function getAllProductGroups()
+    {
+        return $this->teamAffiliations->flatMap(function ($affiliation) {
+            return $affiliation->productGroups;
+        })->unique('id');
     }
 }

@@ -52,33 +52,33 @@ class UserResource extends Resource
                 Section::make(
                     'User Information'
                 )->schema([
-                            TextInput::make('name')
-                                ->required(),
-                            TextInput::make('username')
-                                ->required(),
-                            TextInput::make('email')
-                                ->required(),
-                            TextInput::make('phone_number')
-                                ->required(),
-                            Select::make('roles')
-                                ->relationship('roles', 'name')
-                                // ->multiple()
-                                ->preload()
-                                ->searchable()
-                                ->required(),
-                            TextInput::make('password')
-                                ->password()
-                                ->dehydrated(fn ($state) => filled($state))
-                                ->required(fn (string $operation): bool => $operation === 'create')
-                                ->same('password_confirmation')
-                                ->minLength(8),
-                            TextInput::make('password_confirmation')
-                                ->password()
-                                ->dehydrated(false)
-                                ->required(fn (string $operation): bool => $operation === 'create')
-                                ->minLength(8),
+                    TextInput::make('name')
+                        ->required(),
+                    TextInput::make('username')
+                        ->required(),
+                    TextInput::make('email')
+                        ->required(),
+                    TextInput::make('phone_number')
+                        ->required(),
+                    Select::make('roles')
+                        ->relationship('roles', 'name')
+                        // ->multiple()
+                        ->preload()
+                        ->searchable()
+                        ->required(),
+                    TextInput::make('password')
+                        ->password()
+                        ->dehydrated(fn($state) => filled($state))
+                        ->required(fn(string $operation): bool => $operation === 'create')
+                        ->same('password_confirmation')
+                        ->minLength(8),
+                    TextInput::make('password_confirmation')
+                        ->password()
+                        ->dehydrated(false)
+                        ->required(fn(string $operation): bool => $operation === 'create')
+                        ->minLength(8),
 
-                        ]),
+                ]),
             ]);
     }
 
@@ -93,11 +93,11 @@ class UserResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('username')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('phone_number')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('username')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('roles.name')
                     ->searchable(),

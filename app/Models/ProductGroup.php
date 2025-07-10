@@ -13,9 +13,6 @@ class ProductGroup extends Model
 
     protected $fillable = [
         'name',
-        'target_dfr',
-        'target_profiling',
-        'target_master_call_list',
     ];
 
     public function teamAffiliations(): HasMany

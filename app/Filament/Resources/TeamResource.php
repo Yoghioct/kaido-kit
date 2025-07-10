@@ -5,7 +5,6 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\TeamResource\Pages;
 use App\Filament\Resources\TeamResource\RelationManagers;
 use App\Models\Team;
-use App\Models\ProductGroup;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -18,9 +17,9 @@ class TeamResource extends Resource
 {
     protected static ?string $model = Team::class;
 
+    protected static ?string $navigationIcon = 'heroicon-o-users';
     protected static ?string $navigationLabel = 'Teams';
     protected static ?string $navigationGroup = 'Master Data';
-    protected static ?string $navigationIcon = 'heroicon-o-user-group';
     protected static ?string $modelLabel = 'Team';
 
     public static function form(Form $form): Form
@@ -29,17 +28,18 @@ class TeamResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->required()
+                    ->columnSpanFull()
                     ->maxLength(255),
-                Forms\Components\Select::make('product_groups')
-                    ->label('Product Groups')
-                    ->multiple()
-                    ->relationship('productGroups', 'name')
-                    ->preload()
-                    ->searchable()
-                    ->createOptionForm([
-                        Forms\Components\TextInput::make('name')
+
+                Forms\Components\Repeater::make('teamAffiliations')
+                    ->relationship('teamAffiliations')
+                    ->columnSpanFull()
+                    ->schema([
+                        Forms\Components\Select::make('product_group_cluster_id')
+                            ->label('Product Group Cluster')
+                            ->relationship('productGroupCluster', 'name')
                             ->required()
-                            ->maxLength(255),
+                            ->searchable(),
                         Forms\Components\TextInput::make('target_dfr')
                             ->label('Target DFR')
                             ->numeric()
@@ -52,7 +52,18 @@ class TeamResource extends Resource
                             ->label('Target MCL')
                             ->numeric()
                             ->default(0),
-                    ]),
+                    ])
+                    ->columns(4)
+                    ->defaultItems(0)
+                    ->reorderable(false)
+                    ->collapsible()
+                    ->itemLabel(function (array $state, $record): ?string {
+                        if (isset($state['product_group_cluster_id']) && $record) {
+                            $cluster = \App\Models\ProductGroupCluster::find($state['product_group_cluster_id']);
+                            return $cluster ? $cluster->name : null;
+                        }
+                        return null;
+                    }),
             ]);
     }
 
@@ -62,11 +73,18 @@ class TeamResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('productGroups.name')
-                    ->label('Product Groups')
-                    // ->listWithLineBreaks()
-                    // ->isListWithLineBreaks(false)
+                Tables\Columns\TextColumn::make('productGroupClusters.name')
+                    ->label('Product Group Clusters')
+                    ->badge()
+                    ->separator(',')
                     ->searchable(),
+                // Tables\Columns\TextColumn::make('teamAffiliations')
+                //     ->label('Total MCL')
+                //     ->formatStateUsing(function ($record) {
+                //         return $record->teamAffiliations->sum('target_master_call_list');
+                //     })
+                //     ->numeric()
+                //     ->sortable(),
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
