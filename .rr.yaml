@@ -1,0 +1,25 @@
+version: '3'
+
+rpc:
+  listen: tcp://127.0.0.1:6001
+
+http:
+  address: 0.0.0.0:8000
+  middleware: [ "headers", "gzip" ]
+  pool:
+    num_workers: 2
+    allocate_timeout: 60s
+    destroy_timeout: 60s
+
+server:
+  command: "php artisan octane:start --server=roadrunner --host=127.0.0.1 --port=8000"
+
+logs:
+  mode: development
+  channels:
+    http:
+      level: debug
+    server:
+      level: info
+    metrics:
+      level: info
